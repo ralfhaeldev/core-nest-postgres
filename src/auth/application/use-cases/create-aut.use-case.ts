@@ -1,13 +1,11 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AuthRepository } from 'src/auth/domain/auth-repository.interface';
 import { CreateUserDto } from 'src/auth/interfaces/dtos/create-user.dto';
 import { LoginUserDto } from 'src/auth/interfaces/dtos/login-user.dto';
 
+@Injectable()
 export class CreateAutUseCase {
-  constructor(
-    @Inject('AuthRepository')
-    private authRepository: AuthRepository,
-  ) {}
+  constructor(private authRepository: AuthRepository) {}
 
   async create(createUserDto: CreateUserDto) {
     const user = await this.authRepository.create(createUserDto);

@@ -27,7 +27,7 @@ export class ProductController {
   @Get(':term')
   @UseGuards(AuthGuard())
   findOne(@Param('term') term: string) {
-    return this.crudProductUseCase.findIne(term);
+    return this.crudProductUseCase.findOne(term);
   }
 
   @Get()

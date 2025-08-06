@@ -4,8 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductEntity } from './domain/entities/product.entity';
 import { CrudProductUseCase } from './application/use-cases/crud-product.use-case';
 import { TypeormProductRepository } from './infrastructure/repositories/typeorm-product.repository';
-import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 import { AuthModule } from 'src/auth/auth.module';
+import { ProductRepository } from './domain/product-repository.interface';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProductEntity]), AuthModule],
@@ -14,7 +14,7 @@ import { AuthModule } from 'src/auth/auth.module';
     CrudProductUseCase,
     TypeormProductRepository,
     {
-      provide: 'ProductRepository',
+      provide: ProductRepository,
       useExisting: TypeormProductRepository,
     },
   ],

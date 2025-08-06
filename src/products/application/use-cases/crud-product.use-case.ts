@@ -1,13 +1,13 @@
 import { CreateProductDto } from 'src/products/interfaces/dtos/create-product.dto';
 import { ProductRepository } from 'src/products/domain/product-repository.interface';
 import { ProductEntity } from 'src/products/domain/entities/product.entity';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UpdateProductDto } from '../../interfaces/dtos/update-product.dto';
 import { PaginationDto } from '../../../common/dtos/pagination.dto';
 
+@Injectable()
 export class CrudProductUseCase {
   constructor(
-    @Inject('ProductRepository')
     private readonly productRepository: ProductRepository<ProductEntity>,
   ) {}
 
@@ -20,7 +20,7 @@ export class CrudProductUseCase {
     const product = await this.productRepository.update(id, updateproduct);
     return product;
   }
-  async findIne(term: string) {
+  async findOne(term: string) {
     const product = await this.productRepository.findOne(term);
     return product;
   }

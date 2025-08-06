@@ -1,23 +1,18 @@
-import {
-  BadRequestException,
-  InternalServerErrorException,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { isUUID } from 'class-validator';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { handleDBExceptions } from 'src/common/exceptions/database-exception.handler';
 import { ProductEntity } from 'src/products/domain/entities/product.entity';
 import { ProductRepository } from 'src/products/domain/product-repository.interface';
 import { CreateProductDto } from 'src/products/interfaces/dtos/create-product.dto';
 import { UpdateProductDto } from 'src/products/interfaces/dtos/update-product.dto';
 import { Repository } from 'typeorm';
 
+@Injectable()
 export class TypeormProductRepository
   implements ProductRepository<ProductEntity>
 {
-  private readonly logger = new Logger('ProductsService');
-
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
@@ -49,7 +44,7 @@ export class TypeormProductRepository
       const product = await this.productRepository.save(createProductDto);
       return product;
     } catch (error) {
-      this.handleDBExceptions(error);
+      handleDBExceptions(error);
     }
   }
 
@@ -83,14 +78,5 @@ export class TypeormProductRepository
     });
 
     return products;
-  }
-
-  private handleDBExceptions(error: any): never {
-    if (error.code === '23505') throw new BadRequestException(error.detail);
-
-    this.logger.error(error);
-    throw new InternalServerErrorException(
-      'Unexpected error, check server logs',
-    );
   }
 }

@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  InternalServerErrorException,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthRepository } from 'src/auth/domain/auth-repository.interface';
 import { UserEntity } from 'src/auth/domain/entities/user.entity';
@@ -15,10 +10,10 @@ import * as bcrypt from 'bcrypt';
 import { JwtPayload } from 'src/auth/interfaces/dtos/jwt-payload.interace';
 import { JwtService } from '@nestjs/jwt';
 import { instanceToInstance } from 'class-transformer';
+import { handleDBExceptions } from 'src/common/exceptions/database-exception.handler';
 
+@Injectable()
 export class TypeormAuthRepository implements AuthRepository {
-  private readonly logger = new Logger('TypeormAutRepository');
-
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
@@ -43,7 +38,7 @@ export class TypeormAuthRepository implements AuthRepository {
 
       return response;
     } catch (error) {
-      this.handleDBExceptions(error);
+      handleDBExceptions(error);
     }
   }
 
@@ -78,14 +73,5 @@ export class TypeormAuthRepository implements AuthRepository {
     };
 
     return response;
-  }
-
-  private handleDBExceptions(error: any): never {
-    if (error.code === '23505') throw new BadRequestException(error.detail);
-
-    this.logger.error(error);
-    throw new InternalServerErrorException(
-      'Unexpected error, check server logs',
-    );
   }
 }

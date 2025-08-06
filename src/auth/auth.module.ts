@@ -7,6 +7,7 @@ import { TypeormAuthRepository } from './infrastructure/repositories/typeorm-aut
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthRepository } from './domain/auth-repository.interface';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     CreateAutUseCase,
     TypeormAuthRepository,
     {
-      provide: 'AuthRepository',
+      provide: AuthRepository,
       useExisting: TypeormAuthRepository,
     },
   ],
