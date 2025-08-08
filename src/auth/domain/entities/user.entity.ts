@@ -1,4 +1,5 @@
 import { Exclude } from 'class-transformer';
+import { Role } from 'src/common/enums/roles.enum';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -29,11 +30,8 @@ export class UserEntity {
   })
   isActive: boolean;
 
-  @Column('text', {
-    array: true,
-    default: ['user'],
-  })
-  roles: string[];
+  @Column('text', { array: true, default: [Role.USER] })
+  roles: Role[];
 
   @BeforeInsert()
   checkFieldInsert() {

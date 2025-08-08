@@ -15,6 +15,8 @@ import { CreateProductDto } from '../dtos/create-product.dto';
 import { UpdateProductDto } from '../dtos/update-product.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Role } from 'src/common/enums/roles.enum';
+import { Auth } from 'src/auth/decorators/auth.decorator';
 
 @Controller('product')
 export class ProductController {
@@ -31,7 +33,7 @@ export class ProductController {
   }
 
   @Get()
-  @UseGuards(AuthGuard())
+  @Auth(Role.USER)
   findAll(@Query() paginationDto: PaginationDto) {
     return this.crudProductUseCase.findAll(paginationDto);
   }
